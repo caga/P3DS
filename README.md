@@ -3,7 +3,7 @@ Project Design, Development and Documentation Server
 
 Based on python, markdown, plantuml and pandoc. 
 
-## What it does?
+## What does it do?
 Basicly it looks and searchs markdown files under "markdown/" folder, it allows using plantuml statements in these files, generates html files from them into "web/" folder. Also it adds list of the files into index.html. You can also find and use Bulma.css under "web/" folder.
 ### How to make it go.
 First of all you need to found a virtual python environment, source it and install packages in "requirements.txt". You also need to have "pandoc" install system wide and also need to have "plantuml.jar" in your path.
