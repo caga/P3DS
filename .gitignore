@@ -1,0 +1,27 @@
+/target/**
+.classpath
+.settings/
+.idea/
+*.iml
+*.pyc
+
+.idea/
+*.pyo
+*.mo
+uwsgi.ini
+log/**
+!log/placeholder
+media/**
+**/migrations/**
+**/__pycache__/**
+**/workspace.xml
+venv/
+venv/*
+main/__pycache__/*
+.vscode
+.vscode/*
+**.pyc
+**DS_Store
+
+# KDE dolphin files to be omitted
+.directory

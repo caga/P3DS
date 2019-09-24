@@ -1,0 +1,7 @@
+@startuml
+allow_mixing
+actor User 
+object deneme <<user interface>> {
+}
+User - deneme : M1->
+@enduml
