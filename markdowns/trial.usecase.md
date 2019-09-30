@@ -1,6 +1,6 @@
 <div class="title">
 
-# Kullanım Senaryosu: Hello
+# Kullanım Senaryosu: 
 
 </div>
 
@@ -17,10 +17,10 @@ User -> (Giriş/Yetki Kontrolü)
 
 <div style="padding:10px;margin:10px">
 **Özet:**
-eai
-**Fail:** mieaea
 
-**Ön Şart:**eam
+**Fail:**
+
+**Ön Şart:**
 
 **Ana Silsile:** 
 
