@@ -5,7 +5,36 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.utils.dirsnapshot import DirectorySnapshotDiff
 from datetime import datetime, timedelta
 from convertMd2Html import convertMd2Html
+import dosya
+# import multiprocessing
+import threading
+import re
+import http.server
+import socketserver
+
+STOPSERVER=False
 klasor="markdowns/"
+webklasor="web/"
+htmlconverter=convertMd2Html(" "," ")
+pwd=os.getcwd()
+
+# Dosya listelerini oluşturup, karşılık gelen htmlleri üretelim
+os.chdir(klasor)
+mdFileSet=dosya.liste(".","md")
+os.chdir("../web")
+htmlFileSet=dosya.liste(".","html")
+unprocessedMds=mdFileSet.difference(htmlFileSet)
+unprocessedMdsList=list(unprocessedMds)
+os.chdir(pwd)
+
+#küme boş mu dolu mu kontrol edip ona göre devam edelim
+if bool(unprocessedMds):
+    print("Generating html files from unprocessed Markdown files")
+    for fileFirstName in unprocessedMdsList:
+        htmlconverter.inFile=klasor+fileFirstName+".md"
+        htmlconverter.outFile=webklasor+fileFirstName+".html"
+        htmlconverter.convert2Html()
+
 class MyHandler(FileSystemEventHandler):
     def __init__(self):
         self.last_modified=datetime.now()
@@ -44,6 +73,26 @@ class MyHandler(FileSystemEventHandler):
         self.convert.inFile=createdFile
         self.convert.outFile=generatedHtml
         self.convert.convert2Html()
+
+def server():
+    global STOPSERVER
+    # print(os.getcwd())
+    os.chdir("web")
+    # print(os.getcwd())
+    PORT = 8000
+    Handler = http.server.SimpleHTTPRequestHandler
+    httpd = socketserver.TCPServer(("", PORT), Handler)
+    
+    print("Dokümantasyon Sunucusu %s Portunda başlatıldı" % PORT)
+    while not STOPSERVER:
+        httpd.handle_request()
+    # httpd.socket.close()
+    # httpd.shutdown()
+    # httpd.server_close()
+    
+docserve = threading.Thread(target=server,daemon=True)
+docserve.start()
+os.chdir(pwd)
 event_handler = MyHandler()
 observer = Observer()
 observer.schedule(event_handler, path=klasor, recursive=False)
@@ -55,4 +104,8 @@ try:
         time.sleep(1)
 except KeyboardInterrupt:
     observer.stop()
+    STOPSERVER=True
+    
 observer.join()
+print("\n Documentation server is closed")
+print("\n Güle güle")
