@@ -13,18 +13,27 @@ import http.server
 import socketserver
 
 STOPSERVER=False
+
 klasor="markdowns/"
 webklasor="web/"
+# markdownFolder="/home/osman/calismaAlani/P3DS/markdowns"
+# htmlFolder="/home/osman/calismaAlani/P3DS/web"
+
 htmlconverter=convertMd2Html(" "," ")
+
 pwd=os.getcwd()
+
 
 # Dosya listelerini oluşturup, karşılık gelen htmlleri üretelim
 os.chdir(klasor)
-mdFileSet=dosya.liste(".","md")
+mdFileSet=dosya.namelist(".","md")
 os.chdir("../web")
-htmlFileSet=dosya.liste(".","html")
+htmlFileSet=dosya.namelist(".","html")
 unprocessedMds=mdFileSet.difference(htmlFileSet)
 unprocessedMdsList=list(unprocessedMds)
+
+htmlAllSet=mdFileSet.union(htmlFileSet)
+
 os.chdir(pwd)
 
 #küme boş mu dolu mu kontrol edip ona göre devam edelim
@@ -35,6 +44,12 @@ if bool(unprocessedMds):
         htmlconverter.outFile=webklasor+fileFirstName+".html"
         htmlconverter.convert2Html()
 
+        # index.htmle dosyaları yazalım    
+        
+        # basla='<ul class="otomatik">'
+        # bitir='</ul>'
+        # sayfa="index.html"
+        # dosya.degistir(basla,bitir,sayfa,htmlIncludes)
 class MyHandler(FileSystemEventHandler):
     def __init__(self):
         self.last_modified=datetime.now()
@@ -76,9 +91,9 @@ class MyHandler(FileSystemEventHandler):
 
 def server():
     global STOPSERVER
-    # print(os.getcwd())
+    print(os.getcwd())
     os.chdir("web")
-    # print(os.getcwd())
+    print(os.getcwd())
     PORT = 8000
     Handler = http.server.SimpleHTTPRequestHandler
     httpd = socketserver.TCPServer(("", PORT), Handler)

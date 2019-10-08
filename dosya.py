@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import re
 import glob
 import os
@@ -43,12 +44,15 @@ def oku(basla,bitir,sayfa):
     for line in lines:
         end=re.search(bitir,line)
         begin=re.search(basla,line)
+        baslaSatiri=False
         if begin:
             oku=True
+            baslaSatiri=True
         if end:
             oku=False
-        if oku:
+        if (oku and not baslaSatiri):
             searchedPart.append(line)
+    return searchedPart
             
 
 
@@ -98,3 +102,10 @@ def provisionalListWithHtmlExt(path,extension):
         provisionalHtmlFiles.append(provisionalHtmlFile)
     os.chdir(pwd)
     return provisionalHtmlFiles   
+if "__main__"==__name__:
+    print("Selam")
+    f=input("dosya ismi-oku:")
+    basla=input("baslangıç işaretçi:")
+    bitir=input("son işaretçi: ")
+    context=oku(basla,bitir,f)
+    print(context)
