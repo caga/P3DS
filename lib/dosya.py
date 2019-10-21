@@ -4,6 +4,8 @@ import re
 from pathlib import Path
 
 s="."
+treeString=""
+treeCounter=0
 silmessage=False
 silinenObje=Path()
 yaratmessage=False
@@ -131,23 +133,34 @@ class Klasor:
         else:
             print("Nothing done!")
     def __genTree(self):
-        global s
+        global treeString
+        global treeCounter
+        if self.path.parent ==Path("."):
+            treeString=color.BOLD+treeString+self.name+color.END
+
+        if self.__dosyaListesi !=[]:
+            treeCounter=treeCounter+2
+            for dosya in self.__dosyaListesi:
+                treeString=treeString+"\n"+treeCounter*" "+"|__"+color.YELLOW+dosya.fileName+color.END
+            treeCounter=treeCounter-2
+
         for altKlasor in self.__klasorListesi:
-            if self.path.parent ==Path("."):
-                s=s+"\n|_"+altKlasor.name
-                if self.__dosyaListesi !=[]:
-                    for dosya in self.__dosyaListesi:
-                        s=s+"\n|    *-"+dosya.fileName
-                altKlasor.__genTree()
-            if self.path.parent !=Path("."):
-                s=s+"\n|  |_"+altKlasor.name
-                if self.__dosyaListesi !=[]:
-                    for dosya in self.__dosyaListesi:
-                        s=s+"\n|    *-"+dosya.fileName
-                altKlasor.__genTree()
+            treeCounter=treeCounter+2
+            treeString=treeString+"\n"+treeCounter*" "+"|__"+color.BOLD+altKlasor.name+color.END
+            altKlasor.__genTree()
+            treeCounter=treeCounter-2
+        #         # s=self.name+"\n|__"+color.BOLD+altKlasor.name+color.END
+        #     if self.path.parent !=Path("."):
+        #         s=s+"\n|   |_"+color.BOLD+altKlasor.name+color.END
+        #         # s=s+"\n|_"+color.BOLD+altKlasor.name+color.END
+        #         altKlasor.__genTree()
+        #         if altKlasor.__dosyaListesi !=[]:
+        #             for dosya in altKlasor.__dosyaListesi:
+        #                 s=s+"\n    |_"+dosya.fileName
     def tree(self):
         self.__genTree()
-        print(s)
+        print(treeString)
+        treeCounter=2
 
     def dosyaBul(self,fileName):
         path2File=Path()
@@ -168,3 +181,14 @@ class Klasor:
             self.__init__()
             silmessage=False
         return "Klasor Nesnesi: {}".format(self.name)
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
