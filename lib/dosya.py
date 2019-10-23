@@ -1,14 +1,37 @@
 import glob
 import os
 import re
+import threading
+from threading import Thread
+from concurrent.futures import Future
+import http.server
+import socketserver
 from pathlib import Path
-
+import sys
+# import colorama
+# from colorama import Fore, Back, Style
+# colorama.init()
 s="."
 treeString=""
-treeCounter=0
+treeCounter=2
 silmessage=False
 silinenObje=Path()
 yaratmessage=False
+STOPSERVER=False
+
+# def call_with_future(fn, future, args, kwargs):
+#     try:
+#         result = fn(*args, **kwargs)
+#         future.set_result(result)
+#     except Exception as exc:
+#         future.set_exception(exc)
+
+# def threaded(fn):
+#     def wrapper(*args, **kwargs):
+#         future = Future()
+#         Thread(target=call_with_future, args=(fn, future, args, kwargs)).start()
+#         return future
+#     return wrapper
 
 class Dosya:
     def __init__(self,pathNFileName):
@@ -32,25 +55,8 @@ class Dosya:
             self.fileFirstName=self.fileStrings[0]
     def isimDegistir(self,fileName):
         s=str(self.pathNFileName.parent)+"/"+fileName
-        # self.pathNFileName.rename(s)
         self.__init__(s)
         print(self.fileName)
-        # self.fileName=fileName
-        # self.fileStrings=fileName.split(".")
-        # self.SecondNameFlag=False
-        # self.fileExtension=False
-        # if len(self.fileStrings)==3:
-        #     self.SecondNameFlag=True
-        #     self.fileExtension=True
-        #     self.fileFirstName=self.fileStrings[0]
-        #     self.fileSecondName=self.fileStrings[1]
-        #     self.fileExtension=self.fileStrings[2]
-        # if len(self.fileStrings)==2:
-        #     self.fileExtension=True
-        #     self.fileFirstName=self.fileStrings[0]
-        #     self.fileExtension=self.fileStrings[1]
-        # if len(self.fileStrings)==1:
-        #     self.fileFirstName=self.fileStrings[0]
     def sil(self):
         global silmessage
         global silinenObje
@@ -77,6 +83,10 @@ class Klasor:
         self.name=self.path.parts[-1]
         self.__dosyaListesi=self.dosyalar(initial=True) 
         self.__klasorListesi=self.klasorler(initial=True)
+        self.pipein=os.pipe()
+        self.pipeout=os.pipe()
+        self.port=8000
+        self.thread=threading.Thread(target=self.server)
     def dosyalar(self,initial=None):
         global silmessage
         global silinenObje
@@ -136,37 +146,65 @@ class Klasor:
         global treeString
         global treeCounter
         if self.path.parent ==Path("."):
-            treeString=color.BOLD+treeString+self.name+color.END
+            treeString=treeString+color.project+self.name+color.end
 
         if self.__dosyaListesi !=[]:
             treeCounter=treeCounter+2
             for dosya in self.__dosyaListesi:
-                treeString=treeString+"\n"+treeCounter*" "+"|__"+color.YELLOW+dosya.fileName+color.END
+                treeString=treeString+"\n"+treeCounter*" "+"|__"+color.dosya+dosya.fileName+color.end
             treeCounter=treeCounter-2
 
         for altKlasor in self.__klasorListesi:
             treeCounter=treeCounter+2
-            treeString=treeString+"\n"+treeCounter*" "+"|__"+color.BOLD+altKlasor.name+color.END
+            treeString=treeString+"\n"+treeCounter*" "+"|__"+color.directory+altKlasor.name+color.end
             altKlasor.__genTree()
             treeCounter=treeCounter-2
-        #         # s=self.name+"\n|__"+color.BOLD+altKlasor.name+color.END
-        #     if self.path.parent !=Path("."):
-        #         s=s+"\n|   |_"+color.BOLD+altKlasor.name+color.END
-        #         # s=s+"\n|_"+color.BOLD+altKlasor.name+color.END
-        #         altKlasor.__genTree()
-        #         if altKlasor.__dosyaListesi !=[]:
-        #             for dosya in altKlasor.__dosyaListesi:
-        #                 s=s+"\n    |_"+dosya.fileName
     def tree(self):
+        global treeString
         self.__genTree()
         print(treeString)
-        treeCounter=2
-
+        treeString=""
+        treeCounter=0
     def dosyaBul(self,fileName):
         path2File=Path()
         path2File=self.path / fileName
         p = [dosya for dosya in self.__dosyaListesi if path2File==dosya.pathNFileName][0]
         return p
+    def sunucuBaslat(self,port):
+        global STOPSERVER
+        STOPSERVER = False
+        self.port=port
+        print(self.port)
+        self.thread.start()
+        # docserve = threading.Thread(target=self.__server(port),daemon=True)
+        # docserve.start()
+        print("ERTAN")
+    def sunucuKapat(self):
+        global STOPSERVER
+        STOPSERVER=True
+        self.thread.do_run=False
+        self.thread.join()
+    # @threaded
+    def server(self):
+        t=threading.currentThread()
+        # original=sys.stderr
+        global STOPSERVER
+        STOPSERVER = False
+        PORT = self.port
+        print("server başlayacak:",PORT)
+        Handler = http.server.SimpleHTTPRequestHandler
+        Handler.path=self.path
+        httpd = socketserver.TCPServer(("", PORT), Handler)
+        print("Klasor Sunucusu %s Portunda başlatıldı" % PORT)
+        # pid=os.forkpty()
+        # print("Fork PID:",pid)
+        # while not STOPSERVER:
+        while getattr(t,"do_run",True):
+            # sys.stderr=open("serverLogs.txt","a")
+            httpd.handle_request()
+            # sys.stderr=original
+        print("kapadık")
+        # sys.stdout=original
         
     def __str__(self):
         global silmessage
@@ -182,13 +220,7 @@ class Klasor:
             silmessage=False
         return "Klasor Nesnesi: {}".format(self.name)
 class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
+    project="\033[0;0;35m"
+    directory="\033[0;0;33m"
+    dosya="\033[0;0;34m"
+    end='\033[0m'

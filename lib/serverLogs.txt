@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'e' is not defined
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'eai' is not defined
+127.0.0.1 - - [23/Oct/2019 15:46:54] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 15:59:34] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 15:59:37] "GET /fileConverter.py HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 15:59:42] "GET /serverLogs.txt HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 15:59:44] "GET /trial.usecase.md HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 15:59:47] "GET /project.py HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 15:59:54] "GET /__pycache__/ HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 15:59:55] "GET /__pycache__/fileConverter.cpython-37.pyc HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 15:59:59] "GET /__pycache__/project.cpython-37.pyc HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:01] "GET /__pycache__/dosya.cpython-37.pyc HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:05] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:06] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:06] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:06] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:08] "GET /dosya.py HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:12] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:16] "GET /extentionAnalysis.py HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:19] "GET /server.py HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:29] "GET /plantuml-images/ HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:30] "GET /plantuml-images/19a228e219eb6b99fbdc91c8befc23a5574577c6.uml HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:33] "GET /plantuml-images/ce79e77623a22ca1269a9d1c78808a1f55e2a38e.png HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:00:50] "GET /plantuml-images/19a228e219eb6b99fbdc91c8befc23a5574577c6.png HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2019 16:02:27] "GET /plantuml-images/ce79e77623a22ca1269a9d1c78808a1f55e2a38e.uml HTTP/1.1" 200 -
