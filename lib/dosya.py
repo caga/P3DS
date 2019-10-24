@@ -86,7 +86,7 @@ class Klasor:
         self.pipein=os.pipe()
         self.pipeout=os.pipe()
         self.port=8000
-        self.thread=threading.Thread(target=self.server)
+        self.thread=None 
     def dosyalar(self,initial=None):
         global silmessage
         global silinenObje
@@ -175,18 +175,29 @@ class Klasor:
         STOPSERVER = False
         self.port=port
         print(self.port)
+        self.thread=threading.Thread(target=self.server,daemon=True)
         self.thread.start()
+            
         # docserve = threading.Thread(target=self.__server(port),daemon=True)
         # docserve.start()
         print("ERTAN")
+        print (self.thread.isAlive())
     def sunucuKapat(self):
         global STOPSERVER
         STOPSERVER=True
         self.thread.do_run=False
         self.thread.join()
+        print (self.thread.isAlive())
+        self.thread._stop()
+        print(self.thread.join())
+        print (self.thread.isAlive())
+        self.thread.join()
+    def kontrol(self):
+        print("thread:",self.thread.isAlive())
+
     # @threaded
     def server(self):
-        t=threading.currentThread()
+        # t=threading.currentThread()
         # original=sys.stderr
         global STOPSERVER
         STOPSERVER = False
@@ -199,11 +210,17 @@ class Klasor:
         # pid=os.forkpty()
         # print("Fork PID:",pid)
         # while not STOPSERVER:
-        while getattr(t,"do_run",True):
+        while getattr(self.thread,"do_run",True):
             # sys.stderr=open("serverLogs.txt","a")
-            httpd.handle_request()
+            try:
+                httpd.handle_request()
+            except:
+                print("thread içinde hata")
+                self.thread._stop()
+                self.thread.exit()
             # sys.stderr=original
         print("kapadık")
+        return 1
         # sys.stdout=original
         
     def __str__(self):
