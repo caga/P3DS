@@ -171,10 +171,11 @@ class Klasor:
         p = [dosya for dosya in self.__dosyaListesi if path2File==dosya.pathNFileName][0]
         return p
     def sunucuBaslat(self,port):
-        global STOPSERVER
-        STOPSERVER = False
+        # global STOPSERVER
+        # STOPSERVER = False
         self.port=port
         print(self.port)
+        do_run=True
         self.thread=threading.Thread(target=self.server,daemon=True)
         self.thread.start()
             
@@ -183,33 +184,26 @@ class Klasor:
         print("ERTAN")
         print (self.thread.isAlive())
     def sunucuKapat(self):
-        global STOPSERVER
-        STOPSERVER=True
         self.thread.do_run=False
-        self.thread.join()
-        print (self.thread.isAlive())
+        self.thread._tstate_lock.release_lock()
         self.thread._stop()
-        print(self.thread.join())
-        print (self.thread.isAlive())
-        self.thread.join()
     def kontrol(self):
         print("thread:",self.thread.isAlive())
 
-    # @threaded
     def server(self):
-        # t=threading.currentThread()
-        # original=sys.stderr
-        global STOPSERVER
-        STOPSERVER = False
         PORT = self.port
+        direc=str(self.path)
         print("server başlayacak:",PORT)
-        Handler = http.server.SimpleHTTPRequestHandler
-        Handler.path=self.path
+        class Handler(http.server.SimpleHTTPRequestHandler):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, directory=direc, **kwargs)
+
+
+        # Handler = http.server.SimpleHTTPRequestHandler
+        # Handler.path=self.path
+        # Handler.list_directory
         httpd = socketserver.TCPServer(("", PORT), Handler)
         print("Klasor Sunucusu %s Portunda başlatıldı" % PORT)
-        # pid=os.forkpty()
-        # print("Fork PID:",pid)
-        # while not STOPSERVER:
         while getattr(self.thread,"do_run",True):
             # sys.stderr=open("serverLogs.txt","a")
             try:
@@ -220,7 +214,6 @@ class Klasor:
                 self.thread.exit()
             # sys.stderr=original
         print("kapadık")
-        return 1
         # sys.stdout=original
         
     def __str__(self):
