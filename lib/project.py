@@ -1,13 +1,10 @@
 from dosya import *
+import dosya
 from anytree import Node, RenderTree
-class Project:
-    def __init__(self,projectFolder=None):
-        self.project=Klasor(projectFolder)
-        # self.documentRoot=Klasor(documentRoot)
-        self.parts=self.project.klasorler()
-        self.node=Node(self.project.name)
+class Project(Klasor):
+    def __init__(self,path,level=None,):
+        Klasor.__init__(self,path,level)
     def createOrLoad(self,projectFolder):
-        self.project=Klasor(projectFolder)
         self.parts=self.projectFolder.klasorler()
     def createPart(self,part):
         self.parts.append(part)

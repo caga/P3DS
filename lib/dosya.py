@@ -78,13 +78,17 @@ class Dosya:
     def __repr__(self):
         return "Dosya Nesnesi: {}".format(self.fileName)
 class Klasor:
-    def __init__(self,path):
+    def __init__(self,path,level=None):
         self.path=Path(path)
+        self.level=level
+        if level==None:
+            self.level=0
+        else:
+            self.level=level
         self.name=self.path.parts[-1]
         self.__dosyaListesi=self.dosyalar(initial=True) 
         self.__klasorListesi=self.klasorler(initial=True)
-        self.pipein=os.pipe()
-        self.pipeout=os.pipe()
+        self.__dokumanListesi=self.dokumanlar(initial=True)
         self.port=8000
         self.thread=None 
     def dosyalar(self,initial=None):
@@ -97,11 +101,16 @@ class Klasor:
             silmessage=False
             yaratmessage=False
         return self.__dosyaListesi
-    def klasorler(self,initial=None):
+    def dokumanlar(self,initial=None):
+        global silmessage
+        global yaratmessage
+        self.__dokumanListesi=[dosya for dosya in self.dosyalar(self) if dosya.fileExtension=="md"]
+        return self.__dokumanListesi
+    def klasorler(self,initial=None,level=None):
         global silmessage
         global yaratmessage
         if initial or silmessage or yaratmessage:
-            self.__klasorListesi=[Klasor(str(altKlasor)) for altKlasor in self.path.iterdir() if altKlasor.is_dir()]
+            self.__klasorListesi=[Klasor(str(altKlasor),self.level+1) for altKlasor in self.path.iterdir() if altKlasor.is_dir()]
             silmessage=False
             yaratmessage=False
         return self.__klasorListesi
@@ -185,7 +194,7 @@ class Klasor:
         print (self.thread.isAlive())
     def sunucuKapat(self):
         self.thread.do_run=False
-        self.thread._tstate_lock.release_lock()
+        # self.thread._tstate_lock.release_lock()
         self.thread._stop()
     def kontrol(self):
         print("thread:",self.thread.isAlive())
