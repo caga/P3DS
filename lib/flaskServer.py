@@ -1,4 +1,4 @@
-from flask import Flask, render_template,Response
+from flask import Flask, render_template,Response,request
 import flask
 from dosya import Klasor,Dosya
 
@@ -6,16 +6,17 @@ class EndpointAction(object):
 
     def __init__(self, action):
         self.action = action
+
 # __call__  instance fonksyon olarak kullanıldığında çağrılır
     def __call__(self):
         # Perform the action
-        answer = self.action("sel")
+        answer = self.action()
         # Create the answer (bundle it in a correctly formatted HTTP answer)
         self.response = flask.Response(answer, status=200, headers={})
         # Send it
         return self.response
 
-class FlaskAppWrapper(object):
+class FlaskServer(object):
     def __init__(self,name):
         self.app=Flask(name)
     def run(self):
@@ -24,10 +25,10 @@ class FlaskAppWrapper(object):
 
     def add_all_endpoints(self):
         # Add root endpoint
-        self.add_endpoint(endpoint="/", endpoint_name="/", handler=self.action)
+        self.add_endpoint(endpoint="/", endpoint_name="home", handler=self.home)
 
         # Add action endpoints
-        self.add_endpoint(endpoint="/add_X", endpoint_name="/add_X", handler=self.add_X)
+        self.add_endpoint(endpoint="/about", endpoint_name="about", handler=self.about)
         # you can add more ... 
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
@@ -35,15 +36,19 @@ class FlaskAppWrapper(object):
         # You can also add options here : "... , methods=['POST'], ... "
 
     # ==================== ------ API Calls ------- ====================
-    def action(self,*args):
+    def home(self,userid=None):
         # Dummy action
+        userid=request.args.get("userid")
+        print(userid)
 
-        return "action"+args[0] # String that will be returned and display on the webpage
+        # return "action" # String that will be returned and display on the webpage
+        return render_template("home.html")
         # Test it with curl 127.0.0.1:5000
 
-    def add_X(self):
+    def about(self):
         # Dummy action
-        return "add_X"
+        # return "add_X"
+        return render_template("about.html")
         # Test it with curl 127.0.0.1:5000/add_X
 
 class DocServer(Klasor):
