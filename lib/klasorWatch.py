@@ -14,24 +14,23 @@ class WatchHandler(FileSystemEventHandler):
         super().__init__()
         self.last_modified=datetime.now()
     def on_modified(self, event):
-        print("modified")
+        print("modified:{}".format(event.__repr__()))
     def on_deleted(self,event):
-        print("deleted")
+        print("deleted: {}".format(event.__repr__()))
     def on_created(self,event):
-        print("created")
+        print("created: {}".format(event.__repr__()))
+    def den(self,a):
+        def alt(b):
+           return b
+        print ("alt fonksyon sonuc:{}".format(alt(a)))
 class Watcher:
-    def __init__(self,klasor):
+    def __init__(self,klasor:Klasor):
         self.watchHandler=WatchHandler()
         self.observer=None
-        self.klasor=Klasor(klasor)
+        self.klasor=klasor
         self.thread=None 
-    # def kontrol(self):
-        # print("thread:",self.thread.isAlive())
-    # def start(self):
-        # self.thread=threading.Thread(target=self.watcher,daemon=True)
-        # self.thread.start()
-    # def stop(self):
-        # self.thread.do_run=False
+        # self.watchHandler.den.alt():
+            # print("aha")
     def watcher(self):
         self.observer=Observer()
         self.observer.schedule(self.watchHandler,path=str(self.klasor.path),recursive=False)
@@ -41,10 +40,7 @@ class Watcher:
         sys.stdout.write("eauiea")
     def watcherStop(self):
         self.observer.stop()
+        self.observer.join()
         print ("watcher is closed")
         print(self.observer.is_alive())
-        
-# watcher=Watcher()
-# observer.join()
-# print("\n Documentation server is closed")
-# print("\n Güle güle")
+

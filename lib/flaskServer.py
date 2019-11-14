@@ -1,6 +1,10 @@
 from flask import Flask, render_template,Response,request
 import flask
 from dosya import Klasor,Dosya
+from werkzeug.serving import make_server
+import threading
+from threading import Thread
+
 
 class EndpointAction(object):
 
@@ -8,31 +12,44 @@ class EndpointAction(object):
         self.action = action
 
 # __call__  instance fonksyon olarak kullanıldığında çağrılır
-    def __call__(self):
+    def __call__(self,**kwargs):
         # Perform the action
-        answer = self.action()
+        answer = self.action(**kwargs)
         # Create the answer (bundle it in a correctly formatted HTTP answer)
         self.response = flask.Response(answer, status=200, headers={})
         # Send it
         return self.response
 
-class FlaskServer(object):
-    def __init__(self,name):
-        self.app=Flask(name)
+class FlaskServer(Thread):
+    def __init__(self,name,webklasor:Klasor):
+        Thread.__init__(self)
+        self.app=Flask(name,template_folder=str(webklasor.path)+"/templates",static_url_path="/"+str(webklasor.path)+"/static")
+        self.srv=make_server("127.0.0.1",5000,self.app)
+        # self.ctx=app.app_context()
+        # self.ctx.push()
+
+        self.webklasor=webklasor
+    def webpath(self):
+        print(self.webklasor.path)
     def run(self):
-        self.app.run()
+        # log.info("starting server")
+        print("starting server")
+        self.srv.serve_forever()
+        # self.app.run()
+    def stop(self):
+        self.srv.shutdown()
     
 
-    def add_all_endpoints(self):
+    # def add_all_endpoints(self):
         # Add root endpoint
-        self.add_endpoint(endpoint="/", endpoint_name="home", handler=self.home)
+        # self.add_endpoint(endpoint="/", endpoint_name="home", handler=self.home)
 
         # Add action endpoints
-        self.add_endpoint(endpoint="/about", endpoint_name="about", handler=self.about)
+        # self.add_endpoint(endpoint="/about", endpoint_name="about", handler=self.about)
         # you can add more ... 
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
-        self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler)) 
+        self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler),methods=["POST","GET"]) 
         # You can also add options here : "... , methods=['POST'], ... "
 
     # ==================== ------ API Calls ------- ====================

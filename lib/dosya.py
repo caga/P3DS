@@ -13,6 +13,7 @@ import sys
 # colorama.init()
 s="."
 treeString=""
+webTree=""
 treeCounter=2
 silmessage=False
 silinenObje=Path()
@@ -154,26 +155,44 @@ class Klasor:
     def __genTree(self):
         global treeString
         global treeCounter
+        global webTree
         if self.path.parent ==Path("."):
             treeString=treeString+color.project+self.name+color.end
+            webTree=webTree+self.name
 
         if self.__dosyaListesi !=[]:
             treeCounter=treeCounter+2
             for dosya in self.__dosyaListesi:
                 treeString=treeString+"\n"+treeCounter*" "+"|__"+color.dosya+dosya.fileName+color.end
+                webTree=webTree+"<pre>"+treeCounter*" "+"|__"+"<span style='color:blue'>"+dosya.fileName+"</span>"+"</pre>"
             treeCounter=treeCounter-2
 
         for altKlasor in self.__klasorListesi:
             treeCounter=treeCounter+2
             treeString=treeString+"\n"+treeCounter*" "+"|__"+color.directory+altKlasor.name+color.end
+            webTree=webTree+"<pre>"+treeCounter*" "+"|__"+"<span style='color:red'>"+altKlasor.name+"</span>"+"</pre>"
             altKlasor.__genTree()
             treeCounter=treeCounter-2
     def tree(self):
         global treeString
+        global webTree
+        webTree=""
         self.__genTree()
         print(treeString)
         treeString=""
         treeCounter=0
+    def wtree(self):
+        global treeString
+        global webTree
+        webTree=""
+        self.__genTree()
+        toWeb=webTree
+        treeString=""
+        treeCounter=0
+        return webTree
+
+
+        
     def dosyaBul(self,fileName):
         path2File=Path()
         path2File=self.path / fileName
