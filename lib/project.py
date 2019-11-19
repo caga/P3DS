@@ -14,7 +14,7 @@ class Project(Klasor):
         Klasor.__init__(self,path,level)
         self.web_klasor=[x for x in self.klasorler() if x.name=="web"][0]
         self.src_klasor=[x for x in self.klasorler() if x.name=="src"][0]
-        self.md_klasor=[x for x in self.web_klasor.klasorler() if x.name=="mdSource"][0]
+        # self.md_klasor=[x for x in self.web_klasor.klasorler() if x.name=="mdSource"][0]
         self.fs=FlaskServer(self.name,self.web_klasor)
         Misaka(self.fs.app)
 

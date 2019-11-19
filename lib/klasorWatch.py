@@ -37,7 +37,9 @@ class Watcher:
         self.observer.start()
         print("izleme başladı")
         sys.stderr.write("hede")
-        sys.stdout.write("eauiea")
+        # sys.stdout.write("eauiea")
+        hata=sys.stderr
+        print(hata)
     def watcherStop(self):
         self.observer.stop()
         self.observer.join()

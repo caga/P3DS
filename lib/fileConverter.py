@@ -3,9 +3,9 @@ import subprocess
 import sys
 
 class FileConverter:
-    def __init__(self,inFile,outFile):
-        self.inFile=Dosya(inFile)
-        self.outFile=Dosya(outFile)
+    def __init__(self,inFile:Dosya,outFile:Dosya):
+        self.inFile=inFile
+        self.outFile=outFile
         self.errcode=0
     def convert2Html(self):
         errcode=subprocess.call(["pandoc", "-t", "html5", "--css","bulma.css",self.inFile.pathNFileName,"-s","-o",self.outFile.pathNFileName,"-M","title=Documentation Server","--filter","pandoc-plantuml"],stdout=subprocess.PIPE,stderr=subprocess.STDOUT)

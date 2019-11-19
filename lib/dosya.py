@@ -19,7 +19,7 @@ silmessage=False
 silinenObje=Path()
 yaratmessage=False
 STOPSERVER=False
-
+dosyaBulundu=False
 # def call_with_future(fn, future, args, kwargs):
 #     try:
 #         result = fn(*args, **kwargs)
@@ -36,11 +36,15 @@ STOPSERVER=False
 
 class Dosya:
     def __init__(self,pathNFileName):
-        self.pathNFileName=Path(pathNFileName)
+        if isinstance(pathNFileName,Path):
+            self.pathNFileName=pathNFileName
+        else:
+            self.pathNFileName=Path(pathNFileName)
         self.fileName=str(pathNFileName).split("/")[-1]
         self.fileStrings=self.fileName.split(".")
         self.SecondNameFlag=False
         self.fileExtension=False
+        
 
         if len(self.fileStrings)==3:
             self.SecondNameFlag=True
@@ -54,6 +58,9 @@ class Dosya:
             self.fileExtension=self.fileStrings[1]
         if len(self.fileStrings)==1:
             self.fileFirstName=self.fileStrings[0]
+    # def __init__(self,pathNFileName:Path):
+        
+
     def isimDegistir(self,fileName):
         s=str(self.pathNFileName.parent)+"/"+fileName
         self.__init__(s)
@@ -190,14 +197,68 @@ class Klasor:
         treeString=""
         treeCounter=0
         return webTree
+    def klasorBul(self,klasorName):
+        pass
+
 
 
         
-    def dosyaBul(self,fileName):
-        path2File=Path()
-        path2File=self.path / fileName
-        p = [dosya for dosya in self.__dosyaListesi if path2File==dosya.pathNFileName][0]
-        return p
+    def dosyaBul(self,fileName,level=None):
+        if level==None:
+            level=self.level
+        def localBul(fileName):
+            path2File=Path()
+            path2File=self.path / fileName
+            p = [dosya for dosya in self.__dosyaListesi if path2File==dosya.pathNFileName]
+            if len(p)>0:
+                return p[0]
+            else:
+                print("Klasor -> {} : file not found. Searching other subfolders".format(self.path))
+                for klasor in self.klasorler():
+                    p=klasor.dosyaBul(fileName,-1)
+                    if p!=None:
+                        return p
+                        break
+        p=localBul(fileName)
+        if level>=0:
+            if p!=None:
+                print("\n \t File found: {}".format(p.pathNFileName))
+            else:
+                print("File not found")
+        if p!=None:
+            return p
+
+    def klasorBul(self,klasorName,level=None):
+        if level==None:
+            level=self.level
+        def localBul(klasorName):
+            # path2File=Path()
+            # path2File=self.path / fileName
+            # p = [dosya for dosya in self.__dosyaListesi if path2File==dosya.pathNFileName]
+            path2Klasor=Path()
+
+            path2Klasor=self.path / klasorName
+            p=[klasor for klasor in self.__klasorListesi if path2Klasor==klasor.path]
+            if len(p)>0:
+                return p[0]
+            else:
+                print("Klasor -> {} : Folder not found. Searching other subfolders".format(self.path))
+                for klasor in self.klasorler():
+                    p=klasor.klasorBul(klasorName,-1)
+                    if p!=None:
+                        return p
+                        break
+        p=localBul(klasorName)
+        if level>=0:
+            if p!=None:
+                print("\n \t Folder found: {}".format(p.path))
+            else:
+                print("Folder not found")
+        if p!=None:
+            return p
+        
+        
+
     def sunucuBaslat(self,port):
         # global STOPSERVER
         # STOPSERVER = False
