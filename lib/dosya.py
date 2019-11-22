@@ -6,7 +6,8 @@ from threading import Thread
 from concurrent.futures import Future
 import http.server
 import socketserver
-from pathlib import Path
+from pathlib import *
+import pathlib
 import sys
 # import colorama
 # from colorama import Fore, Back, Style
@@ -34,17 +35,21 @@ dosyaBulundu=False
 #         return future
 #     return wrapper
 
-class Dosya:
-    def __init__(self,pathNFileName):
-        if isinstance(pathNFileName,Path):
-            self.pathNFileName=pathNFileName
+class Dosya(type(pathlib.Path())):
+    def __init__(self,path):
+        print(path)
+        #super.__init__() çalışmıyor
+        PosixPath.__init__(path)
+        if isinstance(path,Path):
+            s=str(path)
+            PosixPath().__init__(s)
         else:
-            self.pathNFileName=Path(pathNFileName)
-        self.fileName=str(pathNFileName).split("/")[-1]
+            PosixPath().__init__(path)
+
+        self.fileName=str(path).split("/")[-1]
         self.fileStrings=self.fileName.split(".")
         self.SecondNameFlag=False
         self.fileExtension=False
-        
 
         if len(self.fileStrings)==3:
             self.SecondNameFlag=True
@@ -58,33 +63,32 @@ class Dosya:
             self.fileExtension=self.fileStrings[1]
         if len(self.fileStrings)==1:
             self.fileFirstName=self.fileStrings[0]
-    # def __init__(self,pathNFileName:Path):
         
 
     def isimDegistir(self,fileName):
-        s=str(self.pathNFileName.parent)+"/"+fileName
+        s=self.replace(fileName)
         self.__init__(s)
         print(self.fileName)
     def sil(self):
         global silmessage
         global silinenObje
-        # silmessage=self.pathNFileName
+        # silmessage=self.path
         silmessage=True
-        silinenObje=self.pathNFileName
-        self.pathNFileName.unlink()
+        silinenObje=self
+        self.unlink()
         returnString="silinen dosya: "+str(silinenObje)
         return returnString
     def yaz(self,String):
-        self.pathNFileName.write_text(String)
+        self.write_text(String)
     def oku(self):
-        return self.pathNFileName.read_text()
+        return self.read_text()
         
 
-    def __str__(self):
-        s=self.fileName
-        return s
-    def __repr__(self):
-        return "Dosya Nesnesi: {}".format(self.fileName)
+    # def __str__(self):
+    #     s=self.fileName
+    #     return s
+    # def __repr__(self):
+    #     return "Dosya Nesnesi: {}".format(self.fileName)
 class Klasor:
     def __init__(self,path,level=None):
         self.path=Path(path)
