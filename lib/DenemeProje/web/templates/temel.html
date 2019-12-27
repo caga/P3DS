@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/temel.css') }}" media="all">
+    <title>{% block title %}{% endblock %} - Project: Document, Design and Development Server</title>
+    {% endblock %}
+  </head>
+  <body>
+    <header>{% block header %}{% endblock %}</header>
+    <div id="main">
+      <nav>{% block nav %}{% endblock %}</nav>
+      <aside>{% block aside %}{% endblock %}</aside>
+      <section>{% block content_section %}{% endblock %}</section>
+    </div>
+    <footer>
+      {% block footer %}
+      &copy; Copyright 2019 by <a href="https://github.com/caga">Cagatay</a>
+      {% endblock %}
+    </footer>
+  </body>
+</html>

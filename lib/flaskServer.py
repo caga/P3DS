@@ -23,14 +23,14 @@ class EndpointAction(object):
 class FlaskServer(Thread):
     def __init__(self,name,webklasor:Klasor):
         Thread.__init__(self)
-        self.app=Flask(name,template_folder=str(webklasor.path)+"/templates",static_url_path="/"+str(webklasor.path)+"/static")
+        self.app=Flask(name,static_folder=str(webklasor)+"/static",template_folder=str(webklasor)+"/templates",static_url_path="/"+str(webklasor)+"/static")
         self.srv=make_server("127.0.0.1",5000,self.app)
         # self.ctx=app.app_context()
         # self.ctx.push()
-
         self.webklasor=webklasor
+        self.app.debug=True
     def webpath(self):
-        print(self.webklasor.path)
+        print(self.webklasor)
     def run(self):
         # log.info("starting server")
         print("starting server")
@@ -53,20 +53,20 @@ class FlaskServer(Thread):
         # You can also add options here : "... , methods=['POST'], ... "
 
     # ==================== ------ API Calls ------- ====================
-    def home(self,userid=None):
-        # Dummy action
-        userid=request.args.get("userid")
-        print(userid)
+    # def home(self,userid=None):
+    #     # Dummy action
+    #     userid=request.args.get("userid")
+    #     print(userid)
 
-        # return "action" # String that will be returned and display on the webpage
-        return render_template("home.html")
-        # Test it with curl 127.0.0.1:5000
+    #     # return "action" # String that will be returned and display on the webpage
+    #     return render_template("home.html")
+    #     # Test it with curl 127.0.0.1:5000
 
-    def about(self):
-        # Dummy action
-        # return "add_X"
-        return render_template("about.html")
-        # Test it with curl 127.0.0.1:5000/add_X
+    # def about(self):
+    #     # Dummy action
+    #     # return "add_X"
+    #     return render_template("about.html")
+    #     # Test it with curl 127.0.0.1:5000/add_X
 
 class DocServer(Klasor):
         

@@ -10,17 +10,18 @@ class Den:
         self.isim="cagatay"
 
 class Project(Klasor):
-    def __init__(self,path,level=None,):
-        Klasor.__init__(self,path,level)
+    def __init__(self,level=None,):
+        Klasor.__init__(self,level)
         self.web_klasor=[x for x in self.klasorler() if x.name=="web"][0]
         self.src_klasor=[x for x in self.klasorler() if x.name=="src"][0]
         # self.md_klasor=[x for x in self.web_klasor.klasorler() if x.name=="mdSource"][0]
-        self.fs=FlaskServer(self.name,self.web_klasor)
-        Misaka(self.fs.app)
+        self.fs=None
+        # self.fs=FlaskServer(self.name,self.web_klasor)
 
     def serverBuild(self,userid=None):
+        self.fs=FlaskServer(self.name,self.web_klasor)
         def home():
-            return render_template("home.html")
+            return render_template("ev.html")
         def about(**kwargs):
             for key,value in kwargs.items():
                 print("%s == %s" %(key,value))
@@ -32,16 +33,27 @@ class Project(Klasor):
             # with open(str(path),"r") as f:
                 # content=f.read()
             return render_template('mdden.html', text=content,webklasor=self.web_klasor)
+        def genel(sayfa=None):
+            print(sayfa)
+            return render_template("%s.html" % sayfa)
+            
+            
 
-
-        self.fs.add_endpoint(endpoint="/",endpoint_name="home",handler=home)
-        self.fs.add_endpoint(endpoint="/about/<int:userid>",endpoint_name="about",handler=about)
-        self.fs.add_endpoint(endpoint="/mdden/<user>",endpoint_name="mdden",handler=mdden)
+        try:
+            self.fs.add_endpoint(endpoint="/",endpoint_name="home",handler=home)
+            self.fs.add_endpoint(endpoint="/about/<int:userid>",endpoint_name="about",handler=about)
+            self.fs.add_endpoint(endpoint="/mdden/<user>",endpoint_name="mdden",handler=mdden)
+            self.fs.add_endpoint(endpoint="/genel/<sayfa>",endpoint_name="genel",handler=genel)
+        except Exception as e:
+            print(e)
     def serverStart(self):
         self.serverBuild()
         self.fs.start()
+        print("server ayakta mi: {}".format(self.fs.is_alive()))
     def serverStop(self):
         self.fs.stop()
+        self.fs.join(timeout=3)
+        print("server ayakta mi: {}".format(self.fs.is_alive()))
 
 
 

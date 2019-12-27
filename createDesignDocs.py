@@ -23,6 +23,7 @@ os.chdir("markdowns")
 htmlIncludes=[]
 
 #Dosyaları Ayarlayalım ve Htmle çevirelim
+
 files=glob.glob("*.md")
 for file in files:
     if os.getcwd().split("/")[-1]!="markdowns":

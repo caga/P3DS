@@ -2,7 +2,10 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Flask Tutorial</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/cagatemel.css') }}" media="all">
+    <script src="{{ url_for('static',filename='js/caga.js') }}"></script>
+    
+    <title>Selam</title>
   </head>
   <body>
     {% extends "template.html" %}
@@ -10,6 +13,9 @@
     
     <h1> My First Try Using Flask </h1>
     <p> Flask is Fun </p>
+    <p id="demo">Bir Paragraf</p>
+    <button type="button" onclick="ilk()">Dene Bakalım</button>
+    <p>fonksyon dış bir dosyada</p>
     
     {% endblock %}
   </body>

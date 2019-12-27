@@ -1,0 +1,55 @@
+{% extends "temel.html" %}
+{% block title %} Indeks {% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/caga.css') }}" media="all">
+{% endblock %}
+
+{% block header %}
+<p>header</p>
+{% endblock %}
+
+{% block nav %}
+<ul>
+  <li>Home</li>
+  <li>Source Code</li>
+  <li>Design Diagrams</li>
+</ul>
+{% endblock %}
+
+{% block aside %}
+Project-Tree
+<ul>
+  <li>Usecases</li>
+  <li>Src</li>
+  <li>Web</li>
+</ul>
+{% endblock %}
+
+{% block content_section %}
+<h1>Indeks</h1>
+<h2>SELAM</h2>
+<p>Hoşgeldiniz, hoşgeldiniz</p>
+<p>Resim</p>
+<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non commodo dolor. Phasellus eget sollicitudin neque. In molestie sollicitudin erat id blandit. Vestibulum sollicitudin diam ac scelerisque facilisis. Vivamus vel metus mollis, posuere diam quis, convallis enim. Praesent eget orci viverra, eleifend enim eget, pellentesque mi. Nulla pellentesque rhoncus felis, in molestie arcu venenatis eget. Nam ac velit tellus. Praesent sodales ultricies diam nec pellentesque. Curabitur vel nulla gravida, facilisis mi sit amet, aliquet ipsum. Vivamus eu magna ut quam cursus egestas. In hac habitasse platea dictumst. Quisque id quam ac eros interdum imperdiet ac eu est.
+</p>
+<img src='{{ url_for("static", filename="images/ev.jpg") }}' alt="EV">
+<p>
+Etiam eu orci odio. Etiam in convallis arcu, sed commodo risus. Aliquam nibh metus, dictum et enim id, fermentum dapibus lectus. Phasellus porta sit amet lorem eu pulvinar. Sed non leo lorem. Phasellus congue augue purus, nec sodales dolor imperdiet finibus. Proin sollicitudin augue nunc, faucibus hendrerit enim bibendum sit amet. Nulla ac vulputate enim, convallis dictum leo. Proin et dapibus leo, et sollicitudin massa. Nam vitae pellentesque urna. Aenean sed eros posuere, rutrum mi vel, maximus lorem. Pellentesque ac lacinia elit. Nunc hendrerit augue ultricies nunc congue, sit amet finibus sem gravida. Cras iaculis interdum ipsum nec sagittis. Donec commodo, purus ut mattis fermentum, eros tellus ornare massa, a mollis quam mi non tellus. Etiam vitae luctus ante.
+</p>
+<p>
+Curabitur sit amet tempus leo, non rhoncus lectus. Nullam et cursus nibh, sit amet eleifend magna. Cras laoreet eu est vitae euismod. Etiam vestibulum, tellus vel sodales tincidunt, nunc mauris tristique metus, in sollicitudin arcu risus eget lacus. Proin gravida malesuada dolor. Phasellus ullamcorper dapibus augue, a tristique orci eleifend non. Maecenas ac nisl sed lorem suscipit molestie at quis libero. Phasellus mi orci, posuere non arcu sit amet, euismod molestie eros. Proin nec ullamcorper elit. Sed pretium nibh libero, tincidunt dictum lorem maximus aliquet. Praesent nunc tortor, congue eget euismod eu, venenatis vitae turpis. Maecenas vitae magna non nisi cursus elementum ac quis est. Sed commodo id augue eget pharetra. Maecenas a quam quis turpis efficitur dignissim.
+</p>
+<p>
+Aenean ut ligula consectetur felis varius varius. Morbi tellus urna, suscipit convallis suscipit in, varius vitae ante. Aenean ac ex sit amet odio iaculis mattis et non lacus. Pellentesque eu massa sed metus sodales iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur lorem justo, efficitur quis ipsum vel, placerat aliquam eros. Donec congue lacus erat, nec condimentum metus laoreet at. Nunc quis scelerisque justo, ac ultrices risus. Duis vehicula in magna vel auctor. Aliquam ligula ex, pellentesque ut mauris id, luctus ultrices est. In sit amet bibendum eros, at auctor diam. Etiam a consequat nunc, at tincidunt urna. Vivamus consectetur lectus a auctor dictum. Morbi in massa elementum, vehicula quam vel, commodo erat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin ornare tristique congue.
+</p>
+<p>
+Donec quis eros et sem commodo facilisis quis nec augue. Integer a mollis tortor. Nunc vestibulum nec nulla sed blandit. Integer non leo non ante euismod sollicitudin. Etiam mattis suscipit quam non pellentesque. Suspendisse viverra nec odio et auctor. Vivamus accumsan sollicitudin odio eu consectetur. Fusce id neque et tellus varius venenatis vitae a arcu. Suspendisse laoreet sed sem ac sagittis. Sed vestibulum, felis non sagittis malesuada, dolor quam ornare arcu, eu euismod mi enim at mauris. Suspendisse ac mauris condimentum, vestibulum metus quis, suscipit elit.
+</p>
+{% endblock %}
+
+{% block footer %}
+{{ super() }}
+den
+{% endblock %}

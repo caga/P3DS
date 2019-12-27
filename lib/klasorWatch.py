@@ -33,7 +33,7 @@ class Watcher:
             # print("aha")
     def watcher(self):
         self.observer=Observer()
-        self.observer.schedule(self.watchHandler,path=str(self.klasor.path),recursive=False)
+        self.observer.schedule(self.watchHandler,path=str(self.klasor),recursive=False)
         self.observer.start()
         print("izleme başladı")
         sys.stderr.write("hede")
