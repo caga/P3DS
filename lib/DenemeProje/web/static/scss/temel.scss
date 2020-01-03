@@ -1,0 +1,128 @@
+$ustmenu_renk:lightblue;
+$arkaresim_ust_opaklik:0.1;
+$arkaresim_alt_opaklik:0.1;
+$arkaresim_metin_rengi:white;
+
+
+@font-face{
+    font-family:Sofia;
+    src: url("../fonts/Sofia-Regular.otf") format("opentype"),
+        url("webfont.eot?#iefix") format("embedded-opentype");
+}
+@font-face{
+    font-family:november;
+    src: url("../fonts/NOVEMBER.TTF") format("truetype"),
+        url("webfont.eot?#iefix") format("embedded-opentype");
+}
+@font-face{
+    font-family:Aldrich;
+    src: url("../fonts/Aldrich-Regular.ttf") format("truetype"),
+        url("webfont.eot?#iefix") format("embedded-opentype");
+}
+
+* {
+    box-sizing: border-box
+}
+ustluk {
+    /* background-color: beige; */
+    /* color: white; */
+    display: block;
+    font-family: Aldrich;
+    font-size: 50px;
+    padding: 60px;
+    width: 100%;
+
+    text-align: center;
+}
+ustmenu {
+    /* border: 1px solid; */
+    /* border-color: black; */
+    display: flex;
+}
+
+ustmenu a {
+    background-color: $ustmenu_renk;
+    border: 1px solid;
+    border-color: black;
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    /* text-align: center; */
+}
+
+ana {  
+  display: flex;
+  flex-wrap: wrap;
+}
+
+yanmenu {
+  /* background-color: pink; */
+
+    background-color:white;
+    border: 1px solid;
+    border-color: black;
+    color: black;
+
+    // display:flex;
+  flex: 15%;
+  margin:15px;
+  padding: 20px;
+}
+
+icerik {
+  background-color: white;
+    border: 1px solid;
+    border-color: black;
+  flex: 75%;
+  padding: 20px;
+  margin: 15px;
+}
+arkaresim {
+    background-image:linear-gradient(to bottom, rgba(255, 255, 255, $arkaresim_ust_opaklik) 0%, rgba(255, 255, 255, $arkaresim_alt_opaklik) 100%), url("../images/baslik_it.jpg");
+    display: flex;
+    color:$arkaresim_metin_rengi;
+    /* position:relative; */
+}
+body{
+
+     background-image: url("../images/baslik_it.jpg"); 
+    font-family: Aldrich;
+}
+
+giris {
+    font-family: Aldrich;
+    font-size: 30px;
+}
+altlik{
+    background-color:lightGreen;
+    padding:20px;
+    margin: 15px;
+    display:flex;
+}
+.klasor{
+    cursor: pointer;
+    -moz-user-select:none;
+    user-select: none;
+}
+.klasor::before{
+    content: "\25B6";
+    color:black;
+    display: inline-block;
+    margin-right: 6px;
+}
+.klasor-down::before{
+    transform: rotate(90deg);
+}
+.tree{
+    display: none;
+}
+.active {
+    display:block;
+}
+#project_tree {
+    margin:0;
+    padding:0;
+}
+ul,#project_tree{
+    list-style-type: none;
+}

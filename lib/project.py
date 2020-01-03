@@ -18,10 +18,28 @@ class Project(Klasor):
         self.fs=None
         # self.fs=FlaskServer(self.name,self.web_klasor)
 
-    def serverBuild(self,userid=None):
-        self.fs=FlaskServer(self.name,self.web_klasor)
+    def serverBuild(self,ip=None,port=None):
+        if ip == None:
+            if port == None:
+                self.fs=FlaskServer(self.name,self.web_klasor,"127.0.0.1","5000")
+                print(1)
+            if port != None:
+                self.fs=FlaskServer(self.name,self.web_klasor,"127.0.0.1",port)
+                print(2)
+        if ip != None:
+            if port == None:
+                self.fs=FlaskServer(self.name,self.web_klasor,ip,"5000")
+                print(3)
+            if port != None:
+                self.fs=FlaskServer(self.name,self.web_klasor,ip,port)
+                print(4)
+
+
+
+        # self.fs=FlaskServer(self.name,self.web_klasor,"172.26.140.25","5000")
         def home():
-            return render_template("ev.html")
+            
+            return render_template("ev.html",project=self)
         def about(**kwargs):
             for key,value in kwargs.items():
                 print("%s == %s" %(key,value))
@@ -46,19 +64,14 @@ class Project(Klasor):
             self.fs.add_endpoint(endpoint="/genel/<sayfa>",endpoint_name="genel",handler=genel)
         except Exception as e:
             print(e)
-    def serverStart(self):
-        self.serverBuild()
+    def serverStart(self,ip=None,port=None):
+        self.serverBuild(ip,port)
         self.fs.start()
         print("server ayakta mi: {}".format(self.fs.is_alive()))
     def serverStop(self):
         self.fs.stop()
         self.fs.join(timeout=3)
         print("server ayakta mi: {}".format(self.fs.is_alive()))
-
-
-
-
-
 
     # def createOrLoad(self,projectFolder):
         # self.parts=self.projectFolder.klasorler()

@@ -2,21 +2,27 @@
 <html>
   <head>
     {% block head %}
+    <meta name="viewport" content="with=device-width, initial-scale=1"> 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/temel.css') }}" media="all">
     <title>{% block title %}{% endblock %} - Project: Document, Design and Development Server</title>
+    <script src="{{ url_for('static', filename='js/caga.js') }}"></script>
     {% endblock %}
   </head>
   <body>
-    <header>{% block header %}{% endblock %}</header>
-    <div id="main">
-      <nav>{% block nav %}{% endblock %}</nav>
-      <aside>{% block aside %}{% endblock %}</aside>
-      <section>{% block content_section %}{% endblock %}</section>
-    </div>
-    <footer>
-      {% block footer %}
+      <arkaresim>
+    <ustluk>
+    {% block ustluk %}{% endblock %}
+    </ustluk>
+      </arkaresim>
+    <ustmenu>{% block ustmenu %}{% endblock %}</ustmenu>
+    <ana>
+      <yanmenu>{% block yanmenu %}{% endblock %}</yanmenu> 
+      <icerik>{% block icerik %}{% endblock %}</icerik>
+    </ana>
+    <altlik>
+      {% block altlik %}
       &copy; Copyright 2019 by <a href="https://github.com/caga">Cagatay</a>
       {% endblock %}
-    </footer>
+    </altlik>
   </body>
 </html>
