@@ -5,7 +5,6 @@
     <meta name="viewport" content="with=device-width, initial-scale=1"> 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/temel.css') }}" media="all">
     <title>{% block title %}{% endblock %} - Project: Document, Design and Development Server</title>
-    <script src="{{ url_for('static', filename='js/caga.js') }}"></script>
     {% endblock %}
   </head>
   <body>
@@ -23,6 +22,7 @@
       {% block altlik %}
       &copy; Copyright 2019 by <a href="https://github.com/caga">Cagatay</a>
       {% endblock %}
+    <script src="{{ url_for('static', filename='js/caga.js') }}"></script>
     </altlik>
   </body>
 </html>
