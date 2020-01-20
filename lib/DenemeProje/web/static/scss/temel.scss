@@ -74,9 +74,11 @@ icerik {
     border: 1px solid;
     border-color: black;
   flex: 75%;
+  // display: flex;
   padding: 20px;
   margin: 15px;
 }
+
 arkaresim {
     background-image:linear-gradient(to bottom, rgba(255, 255, 255, $arkaresim_ust_opaklik) 0%, rgba(255, 255, 255, $arkaresim_alt_opaklik) 100%), url("../images/baslik_it.jpg");
     display: flex;

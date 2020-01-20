@@ -84,6 +84,10 @@ class Dosya(type(pathlib.Path())):
         self.write_text(String)
     def oku(self):
         return self.read_text()
+    def oku2(self):
+        f=open(self,"rb")
+        return f.read()
+
     def degistir(self,basla,bitir,veri):
         """TODO: Docstring for degistir.
         :returns: TODO

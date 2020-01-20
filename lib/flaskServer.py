@@ -1,4 +1,5 @@
 from flask import Flask, render_template,Response,request
+from flask import *
 import flask
 from dosya import Klasor,Dosya
 from werkzeug.serving import make_server
@@ -16,7 +17,8 @@ class EndpointAction(object):
         # Perform the action
         answer = self.action(**kwargs)
         # Create the answer (bundle it in a correctly formatted HTTP answer)
-        self.response = flask.Response(answer, status=200, headers={})
+        # self.response = flask.Response(answer, status=200, headers={})
+        self.response=make_response(answer)
         # Send it
         return self.response
 
@@ -52,6 +54,7 @@ class FlaskServer(Thread):
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler),methods=["POST","GET"]) 
+        # self.app.add_url_rule(endpoint, endpoint_name, handler) 
         # You can also add options here : "... , methods=['POST'], ... "
 
     # ==================== ------ API Calls ------- ====================
