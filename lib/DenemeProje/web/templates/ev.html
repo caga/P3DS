@@ -50,10 +50,12 @@ dosya içeriği:<p>{{ context }}</p>
 <object data="data:image/svg+xml;base64,{{svg}}" width=75%>
 </object>
 {% endif %}
+{% if html %}
+{{ html|safe}}
+{% endif %}
 
 {% endblock %}
 
 {% block altlik %}
 {{ super() }}
-den
 {% endblock %}

@@ -51,6 +51,7 @@ class Dosya(type(pathlib.Path())):
 
         self.fileName=str(path).split("/")[-1]
         self.fileStrings=self.fileName.split(".")
+        self.fileNameNoExt=None
         self.SecondNameFlag=False
         self.fileExtension=False
 
@@ -60,12 +61,15 @@ class Dosya(type(pathlib.Path())):
             self.fileFirstName=self.fileStrings[0]
             self.fileSecondName=self.fileStrings[1]
             self.fileExtension=self.fileStrings[2]
+            self.fileNameNoExt=self.fileFirstName+"."+self.fileSecondName
         if len(self.fileStrings)==2:
             self.fileExtension=True
             self.fileFirstName=self.fileStrings[0]
             self.fileExtension=self.fileStrings[1]
+            self.fileNameNoExt=self.fileFirstName
         if len(self.fileStrings)==1:
             self.fileFirstName=self.fileStrings[0]
+            self.fileNameNoExt=self.fileFirstName
         
 
     def isimDegistir(self,fileName):

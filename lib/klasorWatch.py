@@ -31,7 +31,7 @@ class Watcher:
         self.thread=None 
         # self.watchHandler.den.alt():
             # print("aha")
-    def watcher(self):
+    def Start(self):
         self.observer=Observer()
         self.observer.schedule(self.watchHandler,path=str(self.klasor),recursive=False)
         self.observer.start()
@@ -40,9 +40,8 @@ class Watcher:
         # sys.stdout.write("eauiea")
         hata=sys.stderr
         print(hata)
-    def watcherStop(self):
+    def Stop(self):
         self.observer.stop()
         self.observer.join()
         print ("watcher is closed")
         print(self.observer.is_alive())
-

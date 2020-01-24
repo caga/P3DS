@@ -6,6 +6,9 @@ from flask import *
 import flask
 import base64
 import mimetypes
+from klasorWatch import *
+from fileConverter import *
+# import watchdog
 # from Flask import send_static_file
 a = None
 
@@ -13,16 +16,43 @@ a = None
 class Den:
     def __init__(self):
         self.isim="cagatay"
+class DocWathHandler(WatchHandler):
+    def __init__(self,imageFolder:Klasor,outFolder:Klasor):
+        super().__init__()
+        self.outFolder=outFolder
+        self.imageFolder=imageFolder
+    def on_modified(self, event):
+        print("modified:{}".format(event.__repr__()))
+    def on_deleted(self,event):
+        print("deleted: {}".format(event.__repr__()))
+    def on_created(self,event):
+        print(event.src_path)
+        inFile=Dosya(event.src_path)
+        outFile= self.outFolder / (inFile.fileNameNoExt+".html") 
+        converter=FileConverter(inFile,outFile,self.imageFolder)
+        converter.convert2Html()
+
+class DocWatcher(Watcher):
+    def __init__(self,klasor:Klasor,imageFolder:Klasor,outFolder:Klasor):
+        Watcher.__init__(self,klasor)
+        # super.__init__(self)
+        self.watchHandler=DocWathHandler(imageFolder,outFolder)
 
 class Project(Klasor):
     def __init__(self,level=None,):
         Klasor.__init__(self,level)
         self.web_klasor=[x for x in self.klasorler() if x.name=="web"][0]
         self.src_klasor=[x for x in self.klasorler() if x.name=="src"][0]
-        # self.md_klasor=[x for x in self.web_klasor.klasorler() if x.name=="mdSource"][0]
+        self.doc_klasor=[x for x in self.klasorler() if x.name=="docs"][0]
+        self.md_klasor=[x for x in self.doc_klasor.klasorler() if x.name=="mdSource"][0]
+        # self.docImages=[x for x in self.doc_klasor.klasorler() if x.name=="docImages"][0]
+        self.docImages=[x for x in self.web_klasor.klasorler() if x.name=="static"][0]
         self.fs=None
-        # self.fs=FlaskServer(self.name,self.web_klasor)
+        self.htmlDocs_outFolder=[x for x in self.doc_klasor.klasorler() if x.name=="htmls"][0]
+        self.pdfDocs_outFolder=[x for x in self.doc_klasor.klasorler() if x.name=="pdfs"][0]
 
+        # self.fs=FlaskServer(self.name,self.web_klasor)
+        self.DocWatcher=DocWatcher(self.md_klasor,self.docImages,self.htmlDocs_outFolder)
     def serverBuild(self,ip=None,port=None):
         if ip == None:
             if port == None:
@@ -39,9 +69,8 @@ class Project(Klasor):
                 self.fs=FlaskServer(self.name,self.web_klasor,ip,port)
                 print(4)
         self.fs.app.config["download"]="/home/osman/calismaAlani/P3DS/lib/DenemeProje/download"
-
-
-
+        # dosyalar=Blueprint("dosyalar",__name__,static_folder=self.doc_klasor)
+        # self.fs.app.register_blueprint(dosyalar,url_prefix="/dosyalar")
         # self.fs=FlaskServer(self.name,self.web_klasor,"172.26.140.25","5000")
         def home():
             global a
@@ -50,12 +79,8 @@ class Project(Klasor):
             d=Dosya("./DenemeProje/web/static/images/baslik_it.jpg")
             contex=d.oku2()
             contex=base64.b64encode(d.oku2()).decode("ascii")
-
-            # contex=str(contex)
-            resp=send_from_directory("./DenemeProje/web/static/images","baslik_it.jpg")
-            # print(contex)
-            return render_template("ev.html",project=self,contex=contex,r=resp)
-            # return resp
+            # resp=send_from_directory("./DenemeProje/web/static/images","baslik_it.jpg")
+            return render_template("ev.html",project=self,contex=contex)
         def about(**kwargs):
             for key,value in kwargs.items():
                 print("%s == %s" %(key,value))
@@ -75,7 +100,6 @@ class Project(Klasor):
             mimetype="text/plain"
             a= send_from_directory(self.fs.app.config["download"],filename=filename,mimetype=mimetype,as_attachment=False)
             return a
-
         def fileShare(path):
             print(self)
             print(path)
@@ -91,7 +115,9 @@ class Project(Klasor):
                 contex=dosya.oku2()
                 svg=base64.b64encode(contex).decode('ascii')
                 return render_template("ev.html",project=self,svg=svg)
-
+            if ftype[0].split("/")[1]=='html':
+                contex=dosya.oku()
+                return render_template("ev.html",project=self,html=contex)
             try:
                 context=dosya.oku()
                 return render_template("ev.html",context=context,project=self)
@@ -100,15 +126,6 @@ class Project(Klasor):
                 contex=dosya.oku2()
                 image=base64.b64encode(contex).decode("ascii")
                 return render_template("ev.html",project=self,image=image)
-                
-
-            # mimetype="text/plain"
-            # resp=flask.send_file(path2file,mimetype=mimetype)
-            # resp.headers["content-type"]="text/html"
-            # return resp
-            a= send_from_directory(self.fs.app.config["download"],filename=filename,mimetype=mimetype,as_attachment=False)
-            return a
-
         try:
             self.fs.add_endpoint(endpoint="/",endpoint_name="home",handler=home)
             # self.fs.add_endpoint(endpoint="/about/<int:userid>",endpoint_name="about",handler=about)
@@ -126,13 +143,3 @@ class Project(Klasor):
         self.fs.stop()
         self.fs.join(timeout=3)
         print("server ayakta mi: {}".format(self.fs.is_alive()))
-
-    # def createOrLoad(self,projectFolder):
-        # self.parts=self.projectFolder.klasorler()
-    # def createPart(self,part):
-        # self.parts.append(part)
-    # def deletePart(self,part):
-        # path2Part=Path()
-        # path2Part=self.project.path / part
-   # def tree(self):
-        # self.tree()
