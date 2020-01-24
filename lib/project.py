@@ -36,6 +36,7 @@ class DocWathHandler(WatchHandler):
         outFile= self.outFolder / (inFile.fileNameNoExt+".html") 
         converter=FileConverter(inFile,outFile,self.imageFolder)
         converter.convert2Html()
+        subprocess.run(["rm",self.imageFolder,"/Converted_Pdf-Images/* -fr"]) 
         outFile= self.pdf_outFolder / (inFile.fileNameNoExt+".pdf") 
         converter=FileConverter(inFile,outFile,self.imageFolder)
         converter.convert2Pdf()
