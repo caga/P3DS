@@ -17,12 +17,17 @@ class Den:
     def __init__(self):
         self.isim="cagatay"
 class DocWathHandler(WatchHandler):
-    def __init__(self,imageFolder:Klasor,outFolder:Klasor):
+    def __init__(self,imageFolder:Klasor,outFolder:Klasor,pdf_outFolder:Klasor):
         super().__init__()
         self.outFolder=outFolder
         self.imageFolder=imageFolder
+        self.pdf_outFolder=pdf_outFolder
     def on_modified(self, event):
         print("modified:{}".format(event.__repr__()))
+        # inFile=Dosya(event.src_path)
+        # outFile= self.outFolder / (inFile.fileNameNoExt+".html") 
+        # converter=FileConverter(inFile,outFile,self.imageFolder)
+        # converter.convert2Html()
     def on_deleted(self,event):
         print("deleted: {}".format(event.__repr__()))
     def on_created(self,event):
@@ -31,12 +36,16 @@ class DocWathHandler(WatchHandler):
         outFile= self.outFolder / (inFile.fileNameNoExt+".html") 
         converter=FileConverter(inFile,outFile,self.imageFolder)
         converter.convert2Html()
+        outFile= self.pdf_outFolder / (inFile.fileNameNoExt+".pdf") 
+        converter=FileConverter(inFile,outFile,self.imageFolder)
+        converter.convert2Pdf()
+        
 
 class DocWatcher(Watcher):
-    def __init__(self,klasor:Klasor,imageFolder:Klasor,outFolder:Klasor):
+    def __init__(self,klasor:Klasor,imageFolder:Klasor,outFolder:Klasor,pdf_outFolder:Klasor):
         Watcher.__init__(self,klasor)
         # super.__init__(self)
-        self.watchHandler=DocWathHandler(imageFolder,outFolder)
+        self.watchHandler=DocWathHandler(imageFolder,outFolder,pdf_outFolder)
 
 class Project(Klasor):
     def __init__(self,level=None,):
@@ -52,7 +61,7 @@ class Project(Klasor):
         self.pdfDocs_outFolder=[x for x in self.doc_klasor.klasorler() if x.name=="pdfs"][0]
 
         # self.fs=FlaskServer(self.name,self.web_klasor)
-        self.DocWatcher=DocWatcher(self.md_klasor,self.docImages,self.htmlDocs_outFolder)
+        self.DocWatcher=DocWatcher(self.md_klasor,self.docImages,self.htmlDocs_outFolder,self.pdfDocs_outFolder)
     def serverBuild(self,ip=None,port=None):
         if ip == None:
             if port == None:
