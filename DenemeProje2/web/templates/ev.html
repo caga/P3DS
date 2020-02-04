@@ -1,0 +1,64 @@
+{% extends "temel.html" %}
+{% block title %} Indeks {% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/caga.css') }}" media="all">
+{% endblock %}
+
+{% block ustluk %}
+<p>Project Design Documentation and Development Server</p>
+{% endblock %}
+
+{% macro dizin(anaklasor) -%}
+<li><span class="klasor">{{ anaklasor.name }}</span>
+  <ul class="tree">
+    {% for dosya in anaklasor.dosyalar() %}
+    <li><a href="/dosyalar/{{dosya}}">{{ dosya.name }}</a></li>
+    {% endfor %}
+    {% for klasor in anaklasor.klasorler(1) %}
+    {{ dizin(klasor) }}
+    <!-- <li>{{ klasor.name }}</li> -->
+    {% endfor %}
+    </ul>
+</li>
+{%- endmacro %}
+
+{% block ustmenu %}
+<a href="/">Home</a>
+  <a href="Source Code">Source Code</a>
+  <a href="Design Diagrams">Design Diagrams</a>
+{% endblock %}
+{% block yanmenu %}
+<ul id="project">
+  {{ dizin(project) }}
+</ul>
+{% endblock %}
+
+{% block icerik %}
+<!-- <h1>Indeks</h1> -->
+<!-- <h2>HOŞGELDİN CUMHUR ABİ</h2> -->
+<!-- <h2>MERHABA PINAR HANIM</h2> -->
+<!-- <p>Hoşgeldiniz, hoşgeldiniz</p> -->
+<h3>Dosya İçeriği:</h3>
+<pre>{{ context }}</pre> 
+{% if image %}
+<img src="data:image/jpg;base64,{{ image }}">
+{% endif %}
+{% if pdf %}
+<object data="data:application/pdf;base64,{{ pdf }}" width="100%" height="900px"><p>pdf</p></object>
+{% endif %}
+{% if svg %}
+<object data="data:image/svg+xml;base64,{{svg}}" width=75%>
+</object>
+{% endif %}
+{% if html %}
+deneme
+<!-- <iframe frameborder='0' noresize='noresize' style='position: absolute; background: transparent; width: 100%; height:100%;' src="{{ html }}" frameborder="0"></iframe> -->
+{{ html|safe }}
+{% endif %}
+
+{% endblock %}
+
+{% block altlik %}
+{{ super() }}
+{% endblock %}

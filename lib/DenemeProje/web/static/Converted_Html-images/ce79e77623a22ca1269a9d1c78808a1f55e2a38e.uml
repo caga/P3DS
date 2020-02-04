@@ -1,4 +1,0 @@
-@startuml
-actor User
-User -> (Giriş/Yetki Kontrolü)
-@enduml

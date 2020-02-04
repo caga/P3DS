@@ -1,6 +1,6 @@
-import lib.dosya
+import dosya
 import sys
-from lib.dosya import *
+from dosya import *
 import time
 import os
 from watchdog.observers import Observer

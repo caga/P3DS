@@ -1,7 +1,7 @@
 from flask import Flask, render_template,Response,request
 from flask import *
 import flask
-from dosya import Klasor,Dosya
+from lib.dosya import Klasor,Dosya
 from werkzeug.serving import make_server
 import threading
 from threading import Thread
