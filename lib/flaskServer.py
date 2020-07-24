@@ -23,18 +23,18 @@ class EndpointAction(object):
         return self.response
 
 class FlaskServer(Thread):
-    def __init__(self,name,webklasor:Klasor,ip,port):
+    def __init__(self,name,staticklasor:Klasor,ip,port):
         Thread.__init__(self)
         self.ip=ip
         self.port=port
-        self.app=Flask(name,static_folder=str(webklasor)+"/static",template_folder=str(webklasor)+"/templates",static_url_path="/"+str(webklasor)+"/static")
+        self.app=Flask(name,static_folder=str(staticklasor),template_folder=str(staticklasor)+"/templates",static_url_path="/"+str(staticklasor))
         self.srv=make_server(ip,int(port),self.app)
         # self.ctx=app.app_context()
         # self.ctx.push()
-        self.webklasor=webklasor
+        self.staticklasor=staticklasor
         self.app.debug=True
-    def webpath(self):
-        print(self.webklasor)
+    def staticpath(self):
+        print(self.staticklasor)
     def run(self):
         # log.info("starting server")
         print("starting server")

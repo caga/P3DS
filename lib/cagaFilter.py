@@ -28,11 +28,8 @@ def plantuml(key, value, format_,_):
 
         if "plantuml" in classes:
             caption, typef, keyvals = get_caption(keyvals)
-            imageFolder=Klasor("den/plantuml")
-            filename = get_filename4code('DenemeProje2/web/static/Converted_Html', code)
-            filename = get_filename4code('DenemeProje2/web/static/Converted_Html', code)
+            filename = get_filename4code('DenemeProje2/webNdocs/static/images/Converted_Html', code)
             filetype = get_extension(format_, "png", html="svg", latex="png")
-            
 
             src = filename + '.uml'
             dest = "/"+filename + '.' + filetype

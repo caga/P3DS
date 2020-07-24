@@ -18,32 +18,70 @@ class Den:
     def __init__(self):
         self.isim="cagatay"
 class DocWathHandler(WatchHandler):
-    def __init__(self,imageFolder:Klasor,outFolder:Klasor,pdf_outFolder:Klasor,converterCss:Dosya):
+    def __init__(self,imageFolder:Klasor,html_outFolder:Klasor,pdf_outFolder:Klasor,converterCss:Dosya):
         super().__init__()
-        self.outFolder=outFolder
+        self.html_outFolder=html_outFolder
         self.imageFolder=imageFolder
         self.pdf_outFolder=pdf_outFolder
         self.converterCss=converterCss
-    def on_modified(self, event):
-        print("modified:{}".format(event.__repr__()))
-        # inFile=Dosya(event.src_path)
-        # outFile= self.outFolder / (inFile.fileNameNoExt+".html") 
-        # converter=FileConverter(inFile,outFile,self.imageFolder)
-        # converter.convert2Html()
-    def on_deleted(self,event):
-        print("deleted: {}".format(event.__repr__()))
-    def on_created(self,event):
-        # print(event.src_path)
-        inFile=Dosya(event.src_path)
-        outFile= self.outFolder / (inFile.fileNameNoExt+".html") 
-        converter=FileConverter(inFile,outFile,self.imageFolder,self.converterCss)
-        converter.convert2Html()
-        erasing_process=subprocess.run(["rm", (self.imageFolder / "Converted_Pdf-images/*"),"-fr"]) 
-        print (erasing_process)
-        outFile= self.pdf_outFolder / (inFile.fileNameNoExt+".pdf") 
-        converter=FileConverter(inFile,outFile,self.imageFolder,self.converterCss)
-        converter.convert2Pdf()
+        self.last_modified=datetime.now()
+    # def on_modified(self, event):
+    #     print("ne haber")
+    #     if datetime.now() - self.last_modified < timedelta(seconds=1):
+    #         return
+    #     else:
+    #         self.last_modified = datetime.now()
+    #     # print(event.event_type)
+    #     print("modified:{}".format(event.__repr__()))
+    #     inFile=Dosya(event.src_path)
+    #     if not event.is_directory:
+    #     # and (inFile.fileFirstName!="4913"): 
+    #         print(inFile)
+    #         print("Güncellenen markdown dosyası: {}".format(inFile))
+    #         outFile= self.html_outFolder / (inFile.fileNameNoExt+".html") 
+    #         converter=FileConverter(inFile,outFile,self.imageFolder,self.converterCss)
+    #         converter.convert2Html()
+    #         print("Tekrar oluşturulan html: {}".format(outFile))
+    #         erasing_process=subprocess.run(["rm", (self.imageFolder / "Converted_Pdf-images/*"),"-fr"]) 
+    #         print (erasing_process)
+    #         outFile= self.pdf_outFolder / (inFile.fileNameNoExt+".pdf") 
+    #         converter=FileConverter(inFile,outFile,self.imageFolder,self.converterCss)
+    #         converter.convert2Pdf()
+    #         print("Tekrar oluşturulan pdf: {}".format(outFile))
+    #     else:
+    #         return
+    # def on_deleted(self,event):
+    #     deletedFileMd=Dosya(event.src_path)
+    #     if not event.is_directory and (deletedFileMd.fileFirstName!="4913"): 
+    #         print("Silinen markdown dosyası: {}".format(deletedFileMd))
+    #         CorrespondingHtml=self.html_outFolder / (deletedFileMd.fileNameNoExt+".html")
+    #         CorrespondingPdf=self.pdf_outFolder / (deletedFileMd.fileNameNoExt+".pdf")
+    #         try:
+    #             erasing_html=subprocess.run(["rm", CorrespondingHtml])
+    #             print("Otomatik Silinen html dosyası: {}".format(CorrespondingHtml))
+    #             erasing_pdf=subprocess.run(["rm", CorrespondingPdf])
+    #             print("Otomatik Silinen pdf dosyası: {}".format(CorrespondingPdf))
+    #         except Exception as e:
+    #             print(e)
+    #     else:
+    #        return 
         
+    # def on_created(self,event):
+    #     inFile=Dosya(event.src_path)
+    #     if not event.is_directory and (inFile.fileFirstName!="4913"): 
+    #         print("Yaratılan markdown dosyası: {}".format(inFile))
+    #         outFile= self.html_outFolder / (inFile.fileNameNoExt+".html") 
+    #         converter=FileConverter(inFile,outFile,self.imageFolder,self.converterCss)
+    #         converter.convert2Html()
+    #         print("Oluşturulan html: {}".format(outFile))
+    #         erasing_process=subprocess.run(["rm", (self.imageFolder / "Converted_Pdf-images/*"),"-fr"]) 
+    #         print (erasing_process)
+    #         outFile= self.pdf_outFolder / (inFile.fileNameNoExt+".pdf") 
+    #         converter=FileConverter(inFile,outFile,self.imageFolder,self.converterCss)
+    #         converter.convert2Pdf()
+    #         print("Oluşturulan pdf: {}".format(outFile))
+    #     else:
+    #        return 
 
 class DocWatcher(Watcher):
     def __init__(self,klasor:Klasor,imageFolder:Klasor,outFolder:Klasor,pdf_outFolder:Klasor,converterCss:Dosya):
@@ -54,32 +92,35 @@ class DocWatcher(Watcher):
 class Project(Klasor):
     def __init__(self,level=None,):
         Klasor.__init__(self,level)
-        self.web_klasor=[x for x in self.klasorler() if x.name=="web"][0]
+        self.web_klasor=Klasor(self / "webNdocs" )
+        self.static_klasor=(self.web_klasor / "static")
+        self.doc_klasor=(self.web_klasor / "docs")
+        self.md_klasor=(self.doc_klasor / "markdowns")
+        self.pdfDocs_outFolder=(self.doc_klasor / "pdfs")
+        self.htmlDocs_outFolder=(self.doc_klasor / "htmls")
+        self.converterCss=(self.static_klasor / "css/converter.css")
         self.src_klasor=[x for x in self.klasorler() if x.name=="src"][0]
-        self.doc_klasor=[x for x in self.klasorler() if x.name=="docs"][0]
-        self.md_klasor=[x for x in self.doc_klasor.klasorler() if x.name=="mdSource"][0]
-        self.docImages=[x for x in self.web_klasor.klasorler() if x.name=="static"][0]
+        self.homePageImage=Dosya((self.static_klasor / "images"/ "baslik_it.jpg"))
+        self.docImages=(self.static_klasor / "images")
         self.fs=None
-        self.htmlDocs_outFolder=[x for x in self.doc_klasor.klasorler() if x.name=="htmls"][0]
-        self.pdfDocs_outFolder=[x for x in self.doc_klasor.klasorler() if x.name=="pdfs"][0]
-        self.converterCss=(self.docImages / "css/converter.css")
 
+        # self.DocWatcher=DocWatcher(self.md_klasor,self.static_klasor,self.htmlDocs_outFolder,self.pdfDocs_outFolder,self.converterCss)
         self.DocWatcher=DocWatcher(self.md_klasor,self.docImages,self.htmlDocs_outFolder,self.pdfDocs_outFolder,self.converterCss)
-        self.homePageImage=Dosya((self.docImages / "images"/ "baslik_it.jpg"))
+
     def serverBuild(self,ip=None,port=None):
         if ip == None:
             if port == None:
-                self.fs=FlaskServer(self.name,self.web_klasor,"127.0.0.1","5000")
+                self.fs=FlaskServer(self.name,self.static_klasor,"127.0.0.1","5000")
                 print(1)
             if port != None:
-                self.fs=FlaskServer(self.name,self.web_klasor,"127.0.0.1",port)
+                self.fs=FlaskServer(self.name,self.static_klasor,"127.0.0.1",port)
                 print(2)
         if ip != None:
             if port == None:
-                self.fs=FlaskServer(self.name,self.web_klasor,ip,"5000")
+                self.fs=FlaskServer(self.name,self.static_klasor,ip,"5000")
                 print(3)
             if port != None:
-                self.fs=FlaskServer(self.name,self.web_klasor,ip,port)
+                self.fs=FlaskServer(self.name,self.static_klasor,ip,port)
                 print(4)
         def home():
             global a
@@ -94,7 +135,6 @@ class Project(Klasor):
             print(path)
             # path2file=self / filename
             dosya=Dosya(self / path)
-            
             ftype=mimetypes.guess_type(dosya)
             if ftype[0].split("/")[1]=='pdf':
                 contex=dosya.oku2()

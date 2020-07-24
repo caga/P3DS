@@ -132,7 +132,7 @@ class Dosya(type(pathlib.Path())):
             ara=re.search(satir,line)
             if ara:
                 wlines.append(veri+"\n")
-                print("degisti")
+                # print("degisti")
             else:
                 wlines.append(line)
         f.seek(0)
