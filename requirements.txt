@@ -1,6 +1,6 @@
 argh==0.26.2
 httplib2==0.19.0
-Markdown==3.1.1
+Markdown==3.8.1
 pandoc-plantuml-filter==0.1.2
 pandoc-plantuml-latex==0.2.1
 pandocfilters==1.4.2
